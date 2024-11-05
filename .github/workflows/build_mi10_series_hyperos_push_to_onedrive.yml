@@ -52,12 +52,11 @@ jobs:
           curl https://rclone.org/install.sh | sudo bash
           mkdir -p ~/.config/rclone/
           echo "${{ secrets.RCLONE_TOKEN }}" > token.txt
-          base64 -d token.txt > ~/.config/rclone/rclone.conf
       - name: 5. START PORTING
         run: |
           cd "$GITHUB_WORKSPACE"
           mkdir tmp
-          rclone sync -P onedrive:/ROM_FILES/ tmp/
+          rclone sync -P hmadv:/ROM_FILES/ tmp/
           zipfiles=$(find tmp -name "*.zip")
           for file in $zipfiles; do
             echo "Unzipping $file to devices folder" 
@@ -84,8 +83,5 @@ jobs:
           ls -al "$GITHUB_WORKSPACE"/GithubRelease/
       - name: 7. PUSH ROM TO ONEDRIVE
         run: |
-            rclone sync -P "$GITHUB_WORKSPACE"/out/${{ env.ROM_FILE }} onedrive:/ROM/github-actions
-            SHARE_LINK=$(rclone link onedrive:/ROM/github-actions/ --onedrive-link-scope anonymous)
-            touch file.log
-            echo -e "Onedrive alternate download link: \n $SHARE_LINK" > file.log
+            rclone sync -P "$GITHUB_WORKSPACE"/out/${{ env.ROM_FILE }} hmadv:/ROM/Test
      
